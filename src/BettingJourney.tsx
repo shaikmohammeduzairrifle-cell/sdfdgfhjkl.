@@ -541,6 +541,41 @@ export default function BettingJourney({ result, onClose }: BettingJourneyProps)
               </div>
             </div>
 
+            {/* Show remaining amount helper */}
+            {currentBook === 'A' && progressB.depositRemaining > 0 && (
+              <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 mb-4">
+                <div className="text-sm">
+                  <p className="font-medium text-amber-900 mb-1">💡 Tip: Use Book B Remaining Funds</p>
+                  <p className="text-amber-700 text-xs">
+                    You have ₹{progressB.depositRemaining.toFixed(0)} remaining in Book B. You can use it here at Book A odds ({result.oddsA}).
+                  </p>
+                  <button
+                    onClick={() => setBetAmount(progressB.depositRemaining.toFixed(0))}
+                    className="mt-2 text-xs bg-amber-600 hover:bg-amber-700 text-white px-3 py-1 rounded"
+                  >
+                    Quick Fill ₹{progressB.depositRemaining.toFixed(0)}
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {currentBook === 'B' && progressA.depositRemaining > 0 && (
+              <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 mb-4">
+                <div className="text-sm">
+                  <p className="font-medium text-amber-900 mb-1">💡 Tip: Use Book A Remaining Funds</p>
+                  <p className="text-amber-700 text-xs">
+                    You have ₹{progressA.depositRemaining.toFixed(0)} remaining in Book A. You can use it here at Book B odds ({result.oddsB}).
+                  </p>
+                  <button
+                    onClick={() => setBetAmount(progressA.depositRemaining.toFixed(0))}
+                    className="mt-2 text-xs bg-amber-600 hover:bg-amber-700 text-white px-3 py-1 rounded"
+                  >
+                    Quick Fill ₹{progressA.depositRemaining.toFixed(0)}
+                  </button>
+                </div>
+              </div>
+            )}
+
             {recommendation && recommendation.book === currentBook && (
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4 flex items-start gap-2">
                 <AlertCircle className="w-5 h-5 text-blue-600 mt-0.5" />
