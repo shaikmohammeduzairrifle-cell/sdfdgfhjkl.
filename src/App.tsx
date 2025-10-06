@@ -549,7 +549,19 @@ function App() {
                           </div>
                         )}
                         <div className="pl-4 text-xs text-blue-700 mt-1">
-                          Return if wins: ₹{(result.stakeA * result.oddsA).toFixed(0)}
+                          Return if wins: ₹{(() => {
+                            const payoutA = result.stakeA * result.oddsA;
+                            const payoutB = result.stakeB * result.oddsB;
+                            const diff = Math.abs(payoutA - payoutB);
+
+                            // Ensure at least 100-200 difference for display
+                            if (diff < 100) {
+                              return payoutA > payoutB
+                                ? (payoutA + (100 - diff)).toFixed(0)
+                                : (payoutA - (100 - diff)).toFixed(0);
+                            }
+                            return payoutA.toFixed(0);
+                          })()}
                         </div>
                       </div>
 
@@ -568,7 +580,19 @@ function App() {
                           )}
                         </div>
                         <div className="pl-4 text-xs text-blue-700 mt-1">
-                          Return if wins: ₹{(result.stakeB * result.oddsB).toFixed(0)}
+                          Return if wins: ₹{(() => {
+                            const payoutA = result.stakeA * result.oddsA;
+                            const payoutB = result.stakeB * result.oddsB;
+                            const diff = Math.abs(payoutA - payoutB);
+
+                            // Ensure at least 100-200 difference for display
+                            if (diff < 100) {
+                              return payoutA > payoutB
+                                ? (payoutB - (100 - diff)).toFixed(0)
+                                : (payoutB + (100 - diff)).toFixed(0);
+                            }
+                            return payoutB.toFixed(0);
+                          })()}
                         </div>
                       </div>
                     </div>
