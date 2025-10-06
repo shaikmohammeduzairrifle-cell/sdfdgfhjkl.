@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Calculator, TrendingUp, Info, Map } from 'lucide-react';
 import BettingJourney from './BettingJourney';
 
@@ -6,7 +6,7 @@ function App() {
   const [budget, setBudget] = useState(15000);
   const [oddsA, setOddsA] = useState(1.60);
   const [oddsB, setOddsB] = useState(2.35);
-  const [bonusPercentA, setBonusPercentA] = useState(0);
+  const [bonusPercentA, setBonusPercentA] = useState(20);
   const [bonusPercentB, setBonusPercentB] = useState(20);
   const [minOddsForBonusA, setMinOddsForBonusA] = useState(2.1);
   const [rounding, setRounding] = useState(0);
@@ -280,6 +280,11 @@ function App() {
       oddsB
     });
   };
+
+  // Auto-calculate when any input changes
+  useEffect(() => {
+    calculate();
+  }, [budget, oddsA, oddsB, bonusPercentA, bonusPercentB, minOddsForBonusA, rounding, randomMode]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
