@@ -30,6 +30,7 @@ export default function BettingJourney({ result, onClose }: BettingJourneyProps)
   const [currentBook, setCurrentBook] = useState<'A' | 'B'>('A');
   const [betAmount, setBetAmount] = useState('');
   const [isBonus, setIsBonus] = useState(false);
+  const [fundSource, setFundSource] = useState<'A' | 'B' | null>(null);
 
   useEffect(() => {
     try {
@@ -48,23 +49,41 @@ export default function BettingJourney({ result, onClose }: BettingJourneyProps)
       amount,
       isBonus,
       timestamp: Date.now(),
+      fundSource: fundSource || currentBook,
     };
 
     setJourney(prev => {
-      const book = currentBook === 'A' ? prev.bookA : prev.bookB;
-      const updatedBook = {
-        entries: [...book.entries, newEntry],
-        totalDeposit: isBonus ? book.totalDeposit : book.totalDeposit + amount,
-        totalBonus: isBonus ? book.totalBonus + amount : book.totalBonus,
+      const targetBook = currentBook === 'A' ? prev.bookA : prev.bookB;
+      const sourceBook = fundSource === 'A' ? prev.bookA : fundSource === 'B' ? prev.bookB : (currentBook === 'A' ? prev.bookA : prev.bookB);
+
+      // Update target book (where bet is placed)
+      const updatedTargetBook = {
+        entries: [...targetBook.entries, newEntry],
+        totalDeposit: isBonus ? targetBook.totalDeposit : targetBook.totalDeposit + amount,
+        totalBonus: isBonus ? targetBook.totalBonus + amount : targetBook.totalBonus,
       };
+
+      // Update source book (where funds came from) if different
+      let updatedSourceBook = sourceBook;
+      if (fundSource && fundSource !== currentBook && !isBonus) {
+        updatedSourceBook = {
+          ...sourceBook,
+          totalDeposit: sourceBook.totalDeposit + amount,
+        };
+      }
+
       return {
         ...prev,
-        [currentBook === 'A' ? 'bookA' : 'bookB']: updatedBook,
+        [currentBook === 'A' ? 'bookA' : 'bookB']: updatedTargetBook,
+        ...(fundSource && fundSource !== currentBook ? {
+          [fundSource === 'A' ? 'bookA' : 'bookB']: updatedSourceBook
+        } : {}),
       };
     });
 
     setBetAmount('');
     setIsBonus(false);
+    setFundSource(null);
   };
 
   const removeBet = (bookKey: 'A' | 'B', betId: string) => {
@@ -79,9 +98,22 @@ export default function BettingJourney({ result, onClose }: BettingJourneyProps)
         totalBonus: bet.isBonus ? book.totalBonus - bet.amount : book.totalBonus,
       };
 
+      // If funds came from different book, update that too
+      let updates: any = {
+        [bookKey === 'A' ? 'bookA' : 'bookB']: updatedBook,
+      };
+
+      if (bet.fundSource && bet.fundSource !== bookKey && !bet.isBonus) {
+        const sourceBook = bet.fundSource === 'A' ? prev.bookA : prev.bookB;
+        updates[bet.fundSource === 'A' ? 'bookA' : 'bookB'] = {
+          ...sourceBook,
+          totalDeposit: sourceBook.totalDeposit - bet.amount,
+        };
+      }
+
       return {
         ...prev,
-        [bookKey === 'A' ? 'bookA' : 'bookB']: updatedBook,
+        ...updates,
       };
     });
   };
@@ -359,9 +391,14 @@ export default function BettingJourney({ result, onClose }: BettingJourneyProps)
                       key={entry.id}
                       className="flex items-center justify-between text-sm bg-white rounded p-2 border border-slate-200"
                     >
-                      <span className={entry.isBonus ? 'text-emerald-600' : 'text-slate-800'}>
-                        ₹{entry.amount.toFixed(0)} {entry.isBonus ? '(Bonus)' : '(Deposit)'}
-                      </span>
+                      <div className="flex flex-col">
+                        <span className={entry.isBonus ? 'text-emerald-600' : 'text-slate-800'}>
+                          ₹{entry.amount.toFixed(0)} {entry.isBonus ? '(Bonus)' : '(Deposit)'}
+                        </span>
+                        {entry.fundSource && entry.fundSource !== 'A' && !entry.isBonus && (
+                          <span className="text-xs text-amber-600">From Book {entry.fundSource}</span>
+                        )}
+                      </div>
                       <button
                         onClick={() => removeBet('A', entry.id)}
                         className="text-red-500 hover:text-red-700"
@@ -479,9 +516,14 @@ export default function BettingJourney({ result, onClose }: BettingJourneyProps)
                       key={entry.id}
                       className="flex items-center justify-between text-sm bg-white rounded p-2 border border-slate-200"
                     >
-                      <span className={entry.isBonus ? 'text-emerald-600' : 'text-slate-800'}>
-                        ₹{entry.amount.toFixed(0)} {entry.isBonus ? '(Bonus)' : '(Deposit)'}
-                      </span>
+                      <div className="flex flex-col">
+                        <span className={entry.isBonus ? 'text-emerald-600' : 'text-slate-800'}>
+                          ₹{entry.amount.toFixed(0)} {entry.isBonus ? '(Bonus)' : '(Deposit)'}
+                        </span>
+                        {entry.fundSource && entry.fundSource !== 'B' && !entry.isBonus && (
+                          <span className="text-xs text-amber-600">From Book {entry.fundSource}</span>
+                        )}
+                      </div>
                       <button
                         onClick={() => removeBet('B', entry.id)}
                         className="text-red-500 hover:text-red-700"
@@ -550,7 +592,11 @@ export default function BettingJourney({ result, onClose }: BettingJourneyProps)
                     You have ₹{progressB.depositRemaining.toFixed(0)} remaining in Book B. You can use it here at Book A odds ({result.oddsA}).
                   </p>
                   <button
-                    onClick={() => setBetAmount(progressB.depositRemaining.toFixed(0))}
+                    onClick={() => {
+                      setBetAmount(progressB.depositRemaining.toFixed(0));
+                      setFundSource('B');
+                      setIsBonus(false);
+                    }}
                     className="mt-2 text-xs bg-amber-600 hover:bg-amber-700 text-white px-3 py-1 rounded"
                   >
                     Quick Fill ₹{progressB.depositRemaining.toFixed(0)}
@@ -567,11 +613,27 @@ export default function BettingJourney({ result, onClose }: BettingJourneyProps)
                     You have ₹{progressA.depositRemaining.toFixed(0)} remaining in Book A. You can use it here at Book B odds ({result.oddsB}).
                   </p>
                   <button
-                    onClick={() => setBetAmount(progressA.depositRemaining.toFixed(0))}
+                    onClick={() => {
+                      setBetAmount(progressA.depositRemaining.toFixed(0));
+                      setFundSource('A');
+                      setIsBonus(false);
+                    }}
                     className="mt-2 text-xs bg-amber-600 hover:bg-amber-700 text-white px-3 py-1 rounded"
                   >
                     Quick Fill ₹{progressA.depositRemaining.toFixed(0)}
                   </button>
+                </div>
+              </div>
+            )}
+
+            {fundSource && fundSource !== currentBook && (
+              <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 mb-4 flex items-start gap-2">
+                <AlertCircle className="w-5 h-5 text-amber-600 mt-0.5" />
+                <div className="text-sm">
+                  <p className="font-medium text-amber-900">Using funds from Book {fundSource}</p>
+                  <p className="text-amber-700 text-xs">
+                    This bet will be placed on Book {currentBook}, but funds are from Book {fundSource}
+                  </p>
                 </div>
               </div>
             )}

@@ -33,6 +33,7 @@ export interface BetEntry {
   amount: number;
   isBonus: boolean;
   timestamp: number;
+  fundSource?: 'A' | 'B'; // Track which book the funds came from
 }
 
 export interface BookState {
