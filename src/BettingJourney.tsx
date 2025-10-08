@@ -317,51 +317,21 @@ export default function BettingJourney({ result, onClose }: BettingJourneyProps)
                     <span className="text-slate-600">Placed:</span>
                     <span
                       className={`font-semibold ${
-                        progressA.isDepositComplete ? 'text-green-600' : 'text-slate-800'
+                        progressA.isComplete ? 'text-green-600' : 'text-slate-800'
                       }`}
                     >
-                      ₹{journey.bookA.totalDeposit.toFixed(0)}
+                      ₹{progressA.totalPlaced.toFixed(0)}
                     </span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-slate-600">Remaining:</span>
                     <span className="font-semibold text-orange-600">
-                      ₹{progressA.depositRemaining.toFixed(0)}
+                      ₹{progressA.totalRemaining.toFixed(0)}
                     </span>
                   </div>
                 </div>
 
-                {/* Bonus progress */}
-                {result.bonusStakeA > 0 && (
-                  <div className="bg-emerald-50 rounded-lg p-3 border border-emerald-200">
-                    <div className="flex justify-between text-sm mb-2">
-                      <span className="text-slate-600">Used:</span>
-                      <span
-                        className={`font-semibold ${
-                          progressA.isBonusComplete ? 'text-green-600' : 'text-slate-800'
-                        }`}
-                      >
-                        ₹{journey.bookA.totalBonus.toFixed(0)}
-                      </span>
-                    </div>
-                    <div className="flex justify-between text-sm">
-                      <span className="text-slate-600">Remaining:</span>
-                      <span className="font-semibold text-orange-600">
-                        ₹{progressA.bonusRemaining.toFixed(0)}
-                      </span>
-                    </div>
-                  </div>
-                )}
 
-                {/* TOTAL target progress */}
-                <div className="bg-slate-50 rounded-lg p-3 border border-slate-200">
-                  <div className="flex justify-between text-sm">
-                    <span className="text-slate-600 font-medium">Total Target:</span>
-                    <span className="font-bold text-slate-800">
-                      ₹{result.stakeA.toFixed(0)}
-                    </span>
-                  </div>
-                </div>
               </div>
 
               {/* entries */}
@@ -418,54 +388,22 @@ export default function BettingJourney({ result, onClose }: BettingJourneyProps)
               </div>
 
               <div className="space-y-3 mb-4">
-                {/* Deposit progress */}
+                {/* Total progress */}
                 <div className="bg-white rounded-lg p-3 border border-slate-200">
                   <div className="flex justify-between text-sm mb-2">
                     <span className="text-slate-600">Placed:</span>
                     <span
                       className={`font-semibold ${
-                        progressB.isDepositComplete ? 'text-green-600' : 'text-slate-800'
+                        progressB.isComplete ? 'text-green-600' : 'text-slate-800'
                       }`}
                     >
-                      ₹{journey.bookB.totalDeposit.toFixed(0)}
+                      ₹{progressB.totalPlaced.toFixed(0)}
                     </span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-slate-600">Remaining:</span>
                     <span className="font-semibold text-orange-600">
-                      ₹{progressB.depositRemaining.toFixed(0)}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Bonus progress */}
-                {result.bonusStakeB > 0 && (
-                  <div className="bg-emerald-50 rounded-lg p-3 border border-emerald-200">
-                    <div className="flex justify-between text-sm mb-2">
-                      <span className="text-slate-600">Used:</span>
-                      <span
-                        className={`font-semibold ${
-                          progressB.isBonusComplete ? 'text-green-600' : 'text-slate-800'
-                        }`}
-                      >
-                        ₹{journey.bookB.totalBonus.toFixed(0)}
-                      </span>
-                    </div>
-                    <div className="flex justify-between text-sm">
-                      <span className="text-slate-600">Remaining:</span>
-                      <span className="font-semibold text-orange-600">
-                        ₹{progressB.bonusRemaining.toFixed(0)}
-                      </span>
-                    </div>
-                  </div>
-                )}
-
-                {/* TOTAL target progress */}
-                <div className="bg-slate-50 rounded-lg p-3 border border-slate-200">
-                  <div className="flex justify-between text-sm">
-                    <span className="text-slate-600 font-medium">Total Target:</span>
-                    <span className="font-bold text-slate-800">
-                      ₹{result.stakeB.toFixed(0)}
+                      ₹{progressB.totalRemaining.toFixed(0)}
                     </span>
                   </div>
                 </div>
