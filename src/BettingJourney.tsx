@@ -355,20 +355,10 @@ export default function BettingJourney({ result, onClose }: BettingJourneyProps)
 
                 {/* TOTAL target progress */}
                 <div className="bg-slate-50 rounded-lg p-3 border border-slate-200">
-                  <div className="flex justify-between text-sm mb-1">
+                  <div className="flex justify-between text-sm">
                     <span className="text-slate-600 font-medium">Total Target:</span>
                     <span className="font-bold text-slate-800">
                       ₹{result.stakeA.toFixed(0)}
-                    </span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-slate-600">Remaining to Target:</span>
-                    <span
-                      className={`font-semibold ${
-                        progressA.totalRemaining > 0 ? 'text-orange-600' : 'text-green-600'
-                      }`}
-                    >
-                      ₹{progressA.totalRemaining.toFixed(0)}
                     </span>
                   </div>
                 </div>
@@ -472,20 +462,10 @@ export default function BettingJourney({ result, onClose }: BettingJourneyProps)
 
                 {/* TOTAL target progress */}
                 <div className="bg-slate-50 rounded-lg p-3 border border-slate-200">
-                  <div className="flex justify-between text-sm mb-1">
+                  <div className="flex justify-between text-sm">
                     <span className="text-slate-600 font-medium">Total Target:</span>
                     <span className="font-bold text-slate-800">
                       ₹{result.stakeB.toFixed(0)}
-                    </span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-slate-600">Remaining to Target:</span>
-                    <span
-                      className={`font-semibold ${
-                        progressB.totalRemaining > 0 ? 'text-orange-600' : 'text-green-600'
-                      }`}
-                    >
-                      ₹{progressB.totalRemaining.toFixed(0)}
                     </span>
                   </div>
                 </div>
@@ -545,6 +525,7 @@ export default function BettingJourney({ result, onClose }: BettingJourneyProps)
                 </label>
                 <input
                   type="number"
+                  min="0"
                   value={betAmount}
                   onChange={e => setBetAmount(e.target.value)}
                   placeholder="Enter amount"
@@ -578,6 +559,7 @@ export default function BettingJourney({ result, onClose }: BettingJourneyProps)
                   <div className="flex gap-2 items-center">
                     <input
                       type="number"
+                      min="0"
                       placeholder="Enter amount"
                       className="flex-1 px-2 py-1 text-xs border border-amber-300 rounded focus:ring-1 focus:ring-amber-500 focus:border-amber-500 outline-none"
                       max={progressB.depositRemaining}
@@ -617,6 +599,7 @@ export default function BettingJourney({ result, onClose }: BettingJourneyProps)
                   <div className="flex gap-2 items-center">
                     <input
                       type="number"
+                      min="0"
                       placeholder="Enter amount"
                       className="flex-1 px-2 py-1 text-xs border border-amber-300 rounded focus:ring-1 focus:ring-amber-500 focus:border-amber-500 outline-none"
                       max={progressA.depositRemaining}

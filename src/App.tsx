@@ -290,10 +290,6 @@ function App() {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
       <div className="container mx-auto px-4 py-8 max-w-6xl">
         <div className="mb-8 text-center">
-          <div className="flex items-center justify-center gap-3 mb-3">
-            <Calculator className="w-10 h-10 text-emerald-600" />
-            <h1 className="text-4xl font-bold text-slate-800">Arbitrage Calculator</h1>
-          </div>
           <p className="text-slate-600">Calculate guaranteed profits with deposit bonuses</p>
         </div>
 
@@ -311,6 +307,7 @@ function App() {
                 </label>
                 <input
                   type="number"
+                  min="0"
                   value={budget}
                   onChange={(e) => setBudget(Number(e.target.value))}
                   className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition"
@@ -333,6 +330,7 @@ function App() {
                   </label>
                   <input
                     type="number"
+                    min="0"
                     step="0.01"
                     value={oddsA}
                     onChange={(e) => setOddsA(Number(e.target.value))}
@@ -345,6 +343,7 @@ function App() {
                   </label>
                   <input
                     type="number"
+                    min="0"
                     step="0.01"
                     value={oddsB}
                     onChange={(e) => setOddsB(Number(e.target.value))}
@@ -360,6 +359,7 @@ function App() {
                   </label>
                   <input
                     type="number"
+                    min="0"
                     value={bonusPercentA}
                     onChange={(e) => setBonusPercentA(Number(e.target.value))}
                     className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition"
@@ -371,6 +371,7 @@ function App() {
                   </label>
                   <input
                     type="number"
+                    min="0"
                     value={bonusPercentB}
                     onChange={(e) => setBonusPercentB(Number(e.target.value))}
                     className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition"
@@ -384,6 +385,7 @@ function App() {
                 </label>
                 <input
                   type="number"
+                  min="0"
                   step="0.01"
                   value={minOddsForBonusA}
                   onChange={(e) => setMinOddsForBonusA(Number(e.target.value))}
