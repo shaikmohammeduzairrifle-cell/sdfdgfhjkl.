@@ -314,10 +314,6 @@ export default function BettingJourney({ result, onClose }: BettingJourneyProps)
                 {/* Deposit progress */}
                 <div className="bg-white rounded-lg p-3 border border-slate-200">
                   <div className="flex justify-between text-sm mb-2">
-                    <span className="text-slate-600">Target Deposit:</span>
-                    <span className="font-semibold">₹{result.depositA.toFixed(0)}</span>
-                  </div>
-                  <div className="flex justify-between text-sm mb-2">
                     <span className="text-slate-600">Placed:</span>
                     <span
                       className={`font-semibold ${
@@ -338,10 +334,6 @@ export default function BettingJourney({ result, onClose }: BettingJourneyProps)
                 {/* Bonus progress */}
                 {result.bonusStakeA > 0 && (
                   <div className="bg-emerald-50 rounded-lg p-3 border border-emerald-200">
-                    <div className="flex justify-between text-sm mb-2">
-                      <span className="text-slate-600">Target Bonus:</span>
-                      <span className="font-semibold">₹{result.bonusStakeA.toFixed(0)}</span>
-                    </div>
                     <div className="flex justify-between text-sm mb-2">
                       <span className="text-slate-600">Used:</span>
                       <span
@@ -439,10 +431,6 @@ export default function BettingJourney({ result, onClose }: BettingJourneyProps)
                 {/* Deposit progress */}
                 <div className="bg-white rounded-lg p-3 border border-slate-200">
                   <div className="flex justify-between text-sm mb-2">
-                    <span className="text-slate-600">Target Deposit:</span>
-                    <span className="font-semibold">₹{result.depositB.toFixed(0)}</span>
-                  </div>
-                  <div className="flex justify-between text-sm mb-2">
                     <span className="text-slate-600">Placed:</span>
                     <span
                       className={`font-semibold ${
@@ -463,10 +451,6 @@ export default function BettingJourney({ result, onClose }: BettingJourneyProps)
                 {/* Bonus progress */}
                 {result.bonusStakeB > 0 && (
                   <div className="bg-emerald-50 rounded-lg p-3 border border-emerald-200">
-                    <div className="flex justify-between text-sm mb-2">
-                      <span className="text-slate-600">Target Bonus:</span>
-                      <span className="font-semibold">₹{result.bonusStakeB.toFixed(0)}</span>
-                    </div>
                     <div className="flex justify-between text-sm mb-2">
                       <span className="text-slate-600">Used:</span>
                       <span
@@ -588,19 +572,37 @@ export default function BettingJourney({ result, onClose }: BettingJourneyProps)
               <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 mb-4">
                 <div className="text-sm">
                   <p className="font-medium text-amber-900 mb-1">💡 Tip: Use Book B Remaining Funds</p>
-                  <p className="text-amber-700 text-xs">
+                  <p className="text-amber-700 text-xs mb-2">
                     You have ₹{progressB.depositRemaining.toFixed(0)} remaining in Book B. You can use it here at Book A odds ({result.oddsA}).
                   </p>
-                  <button
-                    onClick={() => {
-                      setBetAmount(progressB.depositRemaining.toFixed(0));
-                      setFundSource('B');
-                      setIsBonus(false);
-                    }}
-                    className="mt-2 text-xs bg-amber-600 hover:bg-amber-700 text-white px-3 py-1 rounded"
-                  >
-                    Quick Fill ₹{progressB.depositRemaining.toFixed(0)}
-                  </button>
+                  <div className="flex gap-2 items-center">
+                    <input
+                      type="number"
+                      placeholder="Enter amount"
+                      className="flex-1 px-2 py-1 text-xs border border-amber-300 rounded focus:ring-1 focus:ring-amber-500 focus:border-amber-500 outline-none"
+                      max={progressB.depositRemaining}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          const value = (e.target as HTMLInputElement).value;
+                          if (value && parseFloat(value) > 0) {
+                            setBetAmount(value);
+                            setFundSource('B');
+                            setIsBonus(false);
+                          }
+                        }
+                      }}
+                    />
+                    <button
+                      onClick={() => {
+                        setBetAmount(progressB.depositRemaining.toFixed(0));
+                        setFundSource('B');
+                        setIsBonus(false);
+                      }}
+                      className="text-xs bg-amber-600 hover:bg-amber-700 text-white px-3 py-1 rounded whitespace-nowrap"
+                    >
+                      Use All
+                    </button>
+                  </div>
                 </div>
               </div>
             )}
@@ -609,19 +611,37 @@ export default function BettingJourney({ result, onClose }: BettingJourneyProps)
               <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 mb-4">
                 <div className="text-sm">
                   <p className="font-medium text-amber-900 mb-1">💡 Tip: Use Book A Remaining Funds</p>
-                  <p className="text-amber-700 text-xs">
+                  <p className="text-amber-700 text-xs mb-2">
                     You have ₹{progressA.depositRemaining.toFixed(0)} remaining in Book A. You can use it here at Book B odds ({result.oddsB}).
                   </p>
-                  <button
-                    onClick={() => {
-                      setBetAmount(progressA.depositRemaining.toFixed(0));
-                      setFundSource('A');
-                      setIsBonus(false);
-                    }}
-                    className="mt-2 text-xs bg-amber-600 hover:bg-amber-700 text-white px-3 py-1 rounded"
-                  >
-                    Quick Fill ₹{progressA.depositRemaining.toFixed(0)}
-                  </button>
+                  <div className="flex gap-2 items-center">
+                    <input
+                      type="number"
+                      placeholder="Enter amount"
+                      className="flex-1 px-2 py-1 text-xs border border-amber-300 rounded focus:ring-1 focus:ring-amber-500 focus:border-amber-500 outline-none"
+                      max={progressA.depositRemaining}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          const value = (e.target as HTMLInputElement).value;
+                          if (value && parseFloat(value) > 0) {
+                            setBetAmount(value);
+                            setFundSource('A');
+                            setIsBonus(false);
+                          }
+                        }
+                      }}
+                    />
+                    <button
+                      onClick={() => {
+                        setBetAmount(progressA.depositRemaining.toFixed(0));
+                        setFundSource('A');
+                        setIsBonus(false);
+                      }}
+                      className="text-xs bg-amber-600 hover:bg-amber-700 text-white px-3 py-1 rounded whitespace-nowrap"
+                    >
+                      Use All
+                    </button>
+                  </div>
                 </div>
               </div>
             )}
